@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block main %}
+<main>
+
+    <h1 class="text" style="margin-top: 80px; font-size: 40px;">Книги</h1>
+    <form id="filter-form">
+        <input  class="input" type="text" id="title-filter" placeholder="Название">
+        <input class="input" type="text" id="author-filter" placeholder="Автор">
+        <input class="input" type="number" id="pages-filter" placeholder="Количество страниц">
+        <input class="input" type="text" id="publisher-filter" placeholder="Издательство">
+        <button class="buttons2" type="submit">Применить фильтр</button>
+    
+    </form>
+    
+    <br>
+    <div class="card-container">
+        {% for i in all_books[:20] %}
+        <div class="card" > <!-- Показываем первые 20 карточек -->
+            <img style="width: 300px;height: 400px;" src="{{i.image_url}}">
+            <h2 class="card-content" style="margin-top: 0px;">{{ i.book }}</h2>
+            <h3 class="card-content" style="margin-top: -15px;">{{ i.author }}</h3>
+            <div class="card-content" style="margin-top: -15px;">{{ i.pages }}</div>
+            <div class="card-content" style="margin-bottom: 8px;">{{ i.publisher }}</div>
+        </div>
+        {% endfor %}
+        
+        <span id="hidden" style="display:none;">20</span>
+        <button class="buttons2" onclick="showMore()">Показать еще</button>
+        <div style="margin-bottom: -70px; display: flex; justify-content: center;"></div>
+    </div>
+</main>
+{% endblock %}
+
+    

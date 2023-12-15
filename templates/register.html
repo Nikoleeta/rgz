@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block main %}
+
+<form method="post">
+    
+    <h1 class="text" style="margin-top: 100px; font-size: 20px;">Пожалуйста, зарегистрируйтесь</h1>
+
+    <div>
+        <label class="text" for="username">Логин:</label>
+        <input class="input"  type="text" name="username" placeholder="username">
+        <span style="color:red">{{errors}}</span>
+    </div>
+
+    <div>
+        <label  class="text" for="password">Пароль:</label>
+        <input class="input" type="text" name="password" placeholder="password">
+        <span style="color:red">{{errors}}</span>
+    </div>
+    <button class="buttons2" type="submit">Зарегистрироваться</button>
+</form>
+
+{% endblock %}

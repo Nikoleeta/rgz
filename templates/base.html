@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kosareva Nikoleta</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+    <header>
+        <div class="buttons">
+                <a href="/login" class="buttons2">Войти</a>
+                <a href="/register" class="buttons2">Зарегистрироваться</a>
+                <span class="username">{{username}}</span>
+        </div>
+        <div class="buttons">
+            <button class="add">Добавить книгу</button>
+            <button class="edit">Редактировать книгу</button>
+            <button class="delete">Удалить книгу</button>
+            <a href="/logout" class="buttons2">Выйти</a>
+        </div>
+    </header>
+
+    <main>
+        {% block main %}{% endblock %}
+    </main>
+
+
+    <footer class="footer">
+        &copy; Kosareva Nikoleta, FBI-12, 3 course, 2023
+    </footer>
+</body>
+</html>

@@ -1,0 +1,93 @@
+header {
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff0c8a5;
+    padding: 10px 10px;
+    position:fixed;
+    height:50px;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: 10;
+    font-weight: bold;
+}
+
+footer {
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff0c8a5;
+    padding: 10px 10px;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+    font-size: 18px;
+    font-family: montserat;
+    font-weight: bold;
+    color: rgb(122, 80, 0);
+
+}
+.buttons button {
+    background-color: #c88800c7;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin-left: 10px;
+    cursor: pointer;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.buttons2 {
+    background-color: #c88800c7;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+  
+    margin-top: 10px;
+    cursor: pointer;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+
+.buttons button:hover {
+    background-color: #895000;
+}
+
+.username{
+    font-size: 18px;
+    font-family: montserat;
+    font-weight: bold;
+    color: rgb(122, 80, 0);
+}
+
+.text{
+    font-size: 18px;
+    color:rgb(122, 80, 0);
+}
+.input{
+    border-color: #895000;
+    border-radius: 5px; 
+    border: 0.5px 0.5px;
+    height: 20px;
+    margin:3px;
+}
+
+.card-container{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 20px; /* интервал между карточками */
+    
+}
+.card{
+    color:#895000;  
+    border-right: 1px solid #ccc;
+
+    height: 550px; /* высота каждой карточки */
+    padding-left:18px;
+    overflow-x: hidden;
+}

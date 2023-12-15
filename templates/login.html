@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block main %}
+    <h1 class="text" style="margin-top: 100px; font-size: 20px;">Пожалуйста, авторизуйтесь</h1>
+
+    {%if error%}
+        <span class="error">{{error}}</span>
+    {%endif%}
+
+    <form method="POST">
+    <div>
+        <label class="text" for="username">Пользователь:</label>
+        <input class="input" type="text" id="username" name="username"  placeholder="username"
+        value="{{username or '' }}">
+    </div>
+    <div>
+        <label class="text" for="password">Пароль:</label>
+        <input class="input" type="password" id="password" name="password" placeholder="password"
+        value="{{password or '' }}">
+    </div>
+    <div>
+        <button class="buttons2" type="submit">Войти</button>
+        <button class="buttons2" type="reset">Отмена</button>
+    </div>
+    </form>   
+{% endblock %}
