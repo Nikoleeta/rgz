@@ -1,20 +1,50 @@
-function showMore() {
-    var cards = document.getElementsByClassName("card-container");
-    var visibleCards = 0;
-  
-    // Считаем видимые карточки
-    for (var i = 0; i < cards.length; i++) {
-      var card = cards[i];
-      if (card.style.display !== "none") {
-        visibleCards++;
-      }
-    }
-    
-    // Показываем следующие 20 карточек
-    for (var j = visibleCards; j < visibleCards + 20 && j < cards.length; j++) {
-      cards[j].style.display = "block";
+const cardsContainer = document.querySelector('.card-container');
+const showMoreBtn = document.getElementById('show-more');
+const cardsPerPage = 20;
+
+// скрыть все карточки, кроме первых 20
+cardsContainer.querySelectorAll('.card').forEach((card, index) => {
+  if (index >= cardsPerPage) {
+    card.style.display = 'none';
+  }
+});
+
+let currentIndex = cardsPerPage;
+
+function showCards() {
+  const cardsToShow = cardsContainer.querySelectorAll('.card');
+
+  // скрыть предыдущие 20 карточек
+  for (let i = currentIndex - cardsPerPage; i < currentIndex; i++) {
+    if (cardsToShow[i]) {
+      cardsToShow[i].style.display = 'none';
     }
   }
+
+  // показать следующие 20 карточек
+  for (let i = currentIndex; i < currentIndex + cardsPerPage; i++) {
+    if (cardsToShow[i]) {
+      cardsToShow[i].style.display = 'block';
+    }
+  }
+
+  // обновляем индекс текущей позиции
+  currentIndex += cardsPerPage;
+
+  // скрываем кнопку, если показаны все карточки
+  if (currentIndex >= cardsToShow.length) {
+    showMoreBtn.style.display = 'none';
+  }
+}
+
+// добавляем обработчик клика на кнопку "Показать еще"
+showMoreBtn.addEventListener('click', showCards);
+
+
+
+
+
+
 // document.getElementById("filter-form").addEventListener("submit", function(event) {
 //     event.preventDefault();
     

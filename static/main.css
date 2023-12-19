@@ -91,3 +91,15 @@ footer {
     padding-left:18px;
     overflow-x: hidden;
 }
+
+.card-container .card {
+    display: none;
+  
+}  
+.card-container .card:nth-child(-n+20) {
+    display: block;
+}   
+  
+#show-more {
+    display: block;
+}
