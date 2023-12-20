@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block main %}
+
+<h1 class="text" style="margin-top: 100px; font-size: 26px;">Какую книгу хотите добавить?</h1>
+    <form method="POST" action="/addbook" enctype="multipart/form-data">
+        <input class="input" type="text" id="book" name="book" placeholder="Название"><br>
+        <input class="input" type="text" id="author" name="author" placeholder="Автор"><br>
+        <input class="input" type="number" id="pages" name="pages" placeholder="Количество страниц"><br>
+        <input class="input" type="text" id="publisher" name="publisher" placeholder="Издательство"><br>
+        <input class="input" type="text" id="photo" name="photo"  placeholder="Фото"><br>
+                <br>
+        <button class="buttons2" type="submit">Добавить</button>
+    </form>
+{% endblock %}

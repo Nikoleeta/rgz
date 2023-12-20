@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block main %}
+
+<h1 class="text" style="margin-top: 100px; font-size: 26px;">Какую книгу хотите удалить?</h1>
+    <form method="POST" >
+        <select name="delete_book">
+            {% for i in all_books %}
+            <option value="{{i.id}}">{{i.book}}</option>
+            {%endfor%}
+        </select>
+        <button class="buttons2" type="submit">Удалить</button>
+    </form>
+{% endblock %}

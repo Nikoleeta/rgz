@@ -75,6 +75,7 @@ footer {
     border: 0.5px 0.5px;
     height: 20px;
     margin:3px;
+    width:max-content;
 }
 
 .card-container{
@@ -86,20 +87,7 @@ footer {
 .card{
     color:#895000;  
     border-right: 1px solid #ccc;
-
     height: 550px; /* высота каждой карточки */
     padding-left:18px;
     overflow-x: hidden;
-}
-
-.card-container .card {
-    display: none;
-  
-}  
-.card-container .card:nth-child(-n+20) {
-    display: block;
-}   
-  
-#show-more {
-    display: block;
 }

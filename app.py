@@ -1,5 +1,5 @@
 from werkzeug.security import check_password_hash, generate_password_hash
-from flask import Flask, Blueprint, render_template, request, make_response, redirect
+from flask import Flask, Blueprint, render_template, request, make_response, redirect,  url_for, abort
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from db import db
@@ -18,7 +18,6 @@ host_ip = "localhost"
 host_port = "5432"
 database_name = "books"
 password = "123"
-login_manager = LoginManager(app)
 
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://Julia:123@localhost/Recipes_rgz?client_encoding=utf8'
 
@@ -26,9 +25,14 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{user_db}:{password}@{hos
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False 
 db.init_app(app)
 
+login_manager = LoginManager()
+login_manager.login_view = "login"
+login_manager.init_app(app)
+
 @login_manager.user_loader
 def load_users(user_id):
     return users.query.get(int(user_id))
+
 
 @app.route('/')
 @app.route('/index')
@@ -36,18 +40,56 @@ def start():
     return redirect('/main', code=302)
 
 
-@app.route('/main')
+@app.route('/main', methods=['POST', 'GET'])
 def mainpage():
-    all_books = books.query.all()
     if current_user.is_authenticated:
         username = current_user.username
     else:
         username = "Кто Вы?"
-    return render_template('mainpage.html', username=username,all_books=all_books)
+    offset = request.args.get('offset', default=0, type=int)
+    books_list = books.query.limit(20).offset(offset).all()
+    return render_template('mainpage.html', all_books=books_list, username=username)
+
+# @app.route('/filtered_book', methods=['POST', 'GET'])
+# def filtered_book():
+#     if current_user.is_authenticated:
+#         username = current_user.username
+#     if request.method == 'POST':
+#         book_title = request.form.get('book')
+#         author = request.form.get('author')
+#         min_pages = request.form.get('min_pages')
+#         max_pages = request.form.get('max_pages')
+#         publisher = request.form.get('publisher')
+#     else:
+#         return render_template('filter.html', username=username)
+#         # Выполнить фильтрацию на основе введенных пользователем параметров
+#     if not all(v is None for v in [book_title, author, min_pages, max_pages, publisher]):
+#         filtered_books_list = filter_books(book_title, author, min_pages, max_pages, publisher)
+#         return render_template('filter.html', filtered_books=filtered_books_list, username=username)
+#     else:
+#         return "Please provide at least one filter criteria."
+    
+# def filter_books(book_title, author, min_pages, max_pages, publisher):
+#     filters = []
+#     if book_title:
+#         filters.append(books.title == book_title)
+#     if author:
+#         filters.append(books.author == author)
+#     if min_pages:
+#         filters.append(books.pages >= min_pages)
+#     if max_pages:
+#         filters.append(books.pages <= max_pages)
+#     if publisher:
+#         filters.append(books.publisher == publisher)
+#     filtered_books = books.query.filter(and_(*filters)).all() if filters else books.query.all()
+#     return filtered_books
+
+
+
 
 
 @app.route('/login', methods=['POST', 'GET'])
-def loggin():
+def login():
     error=''
     if request.method=='GET':
         return render_template('login.html')
@@ -64,7 +106,7 @@ def loggin():
     if my_user is not None:
         if check_password_hash(my_user.password, password_form):
             login_user(my_user, remember=False)
-            return redirect('/books')
+            return redirect('/main')
         else:
             error='неверный пароль'
             return render_template('login.html', error=error) 
@@ -100,42 +142,154 @@ def logout():
     logout_user()
     return redirect('/login')
 
-
 @app.route('/books', methods=['POST', 'GET'])
+@login_required
 def book():
-    username = (users.query.filter_by(id=current_user.id).first()).username
-    if request.method == 'GET':
-        all_books = books.query.all()
-        return render_template('mainpage.html', username=username, all_books=all_books)
+    if current_user.is_authenticated:
+        username = current_user.username
+        if request.method == 'GET':
+            all_books = books.query.all()
+            return render_template('mainpage.html', username=username, all_books=all_books)
+        elif request.method == 'POST':
+            name = request.form.get('name')
+            author = request.form.get('author')
+            pages = request.form.get('pages')
+            publisher = request.form.get('publisher')
+
+            filtered_books = books.query.filter(
+                books.name.ilike(f'%{name}%'),
+                books.author.ilike(f'%{author}%'),
+                books.publisher.ilike(f'%{publisher}%')
+            ).all()
+
+            return render_template('mainpage.html', username=username, all_books=filtered_books)
     else:
-        name = request.form.get('name')
-        all_books = books.query.filter(books.name.ilike(f'%{name}%'))
-        return render_template('mainpage.html', username=username, all_books=all_books)
+        abort(404)
 
 
-@app.route('/filter-books', methods=['GET'])
-def filter_books():
-    book = request.args.get('book')
-    author = request.args.get('author')
-    pages = request.args.get('pages')
-    publisher = request.args.get('publisher')
+@app.route('/addbook', methods=['POST', 'GET'])
+def add():
+    admin = users.query.filter_by(id=current_user.id).first().is_admin
+    if admin:
+        username = (users.query.filter_by(id=current_user.id).first()).username
+        if request.method == 'GET':
+            return render_template("add.html", username=username)
+        else:
+            book = request.form.get("book")
+            author = request.form.get("author")
+            pages = request.form.get("pages")
+            publisher = request.form.get("publisher")
+            photo = request.form.get("photo")
+
+            if not book or not author or not pages or not publisher or not photo:
+                errors = "Заполните все поля"
+                return render_template('add.html', username=username, errors=errors)
+            id=books.query.order_by(books.id.desc()).first().id+1
+            # Используем автоинкрементный идентификатор
+            newbook = books(
+                id=id,
+                book=book,
+                author=author,
+                image_url=photo,  # Предполагая, что вы сохраняете имя файла в базе данных для отображения изображения
+                pages=pages,
+                publisher=publisher
+            )
+            db.session.add(newbook)
+            db.session.commit()
+
+            return redirect('/main', code=302)
+    else:
+        return redirect('/main')
     
-    filtered_books = filter_books_by_params(book, author, pages, publisher)
+@app.route('/delete', methods=['POST', 'GET'])
+def delete():
+    admin = users.query.filter_by(id=current_user.id).first().is_admin
+    if admin:
+        username = (users.query.filter_by(id=current_user.id).first()).username
+        all_books=books.query.all()
+        idbook=request.form.get("delete_book")
+        if request.method == 'GET':
+            return render_template("delete.html", username=username, all_books=all_books)
+        else:
+            delete_book=books.query.filter_by(id=idbook).first()
+            db.session.delete(delete_book)
+            db.session.commit()
+
+            return redirect('/main', code=302)
+    else:
+        return redirect('/main')
     
-    return render_template('mainpage.html', all_books=filtered_books)
 
-def filter_books_by_params(books, params):
-    filtered_books = []
+@app.route('/edit/', methods=['POST', 'GET'])
+def edit():
+    admin = users.query.filter_by(id=current_user.id).first().is_admin
+    if admin:
+        username = (users.query.filter_by(id=current_user.id).first()).username
+        all_books=books.query.all()
+        idbook=request.form.get("delete_book")
+        if request.method == 'GET':
+            return render_template("edit_choose.html", username=username, idbook=idbook, all_books=all_books)
+        else:
+            idbook=request.form.get("delete_book")
+            return redirect(f'/edit/{idbook}', code=302)
+    else:
+        return redirect('/main')
 
-    for book in books:
-        is_match = True
-        for param, value in params.items():
-            if getattr(book, param) != value:
-                is_match = False
-                break
-        if is_match:
-            filtered_books.append(book)
+@app.route('/edit/<int:idbook>', methods=['POST', 'GET'])
+def editbook(idbook):
+    admin = users.query.filter_by(id=current_user.id).first().is_admin
+    if admin:
+        username = (users.query.filter_by(id=current_user.id).first()).username
+        booktoedit = books.query.get(idbook)
+        if request.method == 'GET':
+            return render_template("edit.html", username=username, book=booktoedit)
+        else:
+            book = request.form.get("book")
+            author = request.form.get("author")
+            pages = request.form.get("pages")
+            publisher = request.form.get("publisher")
+            photo = request.form.get("photo")
 
-    return filtered_books
+            if not book or not author or not pages or not publisher or not photo:
+                errors = "Заполните все поля"
+                return render_template('edit.html', username=username, errors=errors, book=booktoedit)
 
+            booktoedit.book = book
+            booktoedit.author = author
+            booktoedit.pages = pages
+            booktoedit.publisher = publisher
+            booktoedit.imageurl = photo
+
+            db.session.commit()
+
+            return redirect('/main', code=302)
+    else:
+        return redirect('/main')
+
+@app.route('/book20')
+def next_books():
+    if current_user.is_authenticated:
+        username = current_user.username
+        offset = request.args.get('offset', default=20, type=int)
+        if offset <100:
+            books_per_page = 20 
+            all_books = books.query.all() 
+            current_books = all_books[offset:offset + books_per_page]  
+            return render_template('mainpage.html', all_books=current_books, offset=offset + books_per_page, username=username)
+        else:
+            return redirect('/main')
+
+
+@app.route('/previous_books')
+def previous_books():
+     if current_user.is_authenticated:
+        username = current_user.username
+        offset = request.args.get('offset', default=20, type=int)
+        books_per_page = 20 
+        all_books = books.query.all() 
+        if offset - books_per_page > 0:
+            previous_books = all_books[offset - books_per_page:offset]
+            return render_template('mainpage.html', all_books=previous_books, offset=offset - books_per_page,  username=username)
+        else:
+            return redirect('/main' )
 
