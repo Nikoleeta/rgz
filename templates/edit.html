@@ -2,11 +2,11 @@
 {% block main %}
     <h1 class="text" style="margin-top: 100px; font-size: 26px;">Редактировать книгу</h1>
     <form method="POST">
-        <input class="input" type="text" id="book" name="book" value="{{ book }}" placeholder="Название"><br>
-        <input  class="input" type="text" id="author" name="author" value="{{ author }}" placeholder="Автор"><br>
-        <input  class="input" type="number" id="pages" name="pages" value="{{ pages }}" placeholder="Количество страниц"><br>
-        <input  class="input" type="text" id="publisher" name="publisher" value="{{publisher }}" placeholder="Издательство"><br>
-        <input class="input" type="text" id="photo" name="photo" value="{{ image_url }}" placeholder="Ссылка на картинку"><br>
+        <input class="input" type="text" id="book" name="book" value="{{ booktoedit.book }}" placeholder="Название"><br>
+        <input  class="input" type="text" id="author" name="author" value="{{ booktoedit.author }}" placeholder="Автор"><br>
+        <input  class="input" type="number" id="pages" name="pages" value="{{ booktoedit.pages }}" placeholder="Количество страниц"><br>
+        <input  class="input" type="text" id="publisher" name="publisher" value="{{booktoedit.publisher }}" placeholder="Издательство"><br>
+        <input class="input" type="text" id="photo" name="photo" value="{{ booktoedit.image_url }}" placeholder="Ссылка на картинку"><br>
         <br>
         <input class="buttons2" type="submit" value="Сохранить изменения">
     </form>
