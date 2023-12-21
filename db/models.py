@@ -16,10 +16,10 @@ class users(db.Model, UserMixin):
 class books(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     book = db.Column(db.String(100), nullable=False)
-    image_url = db.Column(db.String, nullable=True)
+    image_url = db.Column(db.String(1000), nullable=True)
     author = db.Column(db.String(100), nullable=False)
     pages = db.Column(db.Integer, nullable=False)
-    publisher = db.Column(db.String, nullable=False)
+    publisher = db.Column(db.String(200), nullable=False)
     
     def repr(self):
         return f"id:{self.id}, book:{self.book}, image_url:{self.image_url}, author:{self.author}, pages:{self.pages}, publisher:{self.publisher}"
