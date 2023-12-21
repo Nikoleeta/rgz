@@ -14,9 +14,9 @@ app = Flask(__name__)
 
 app.secret_key = '12345'
 user_db = "nickoleta"
-host_ip = "localhost"
-host_port = "5432"
-database_name = "nickoleta.mysql.pythonanywhere-services.com"
+host_ip = "nickoleta.mysql.pythonanywhere-services.com"
+host_port = "3306"
+database_name = "nickoleta$default"
 password = "postgres"
 
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://Julia:123@localhost/Recipes_rgz?client_encoding=utf8'
