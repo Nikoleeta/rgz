@@ -295,7 +295,7 @@ def next_books():
     if current_user.is_authenticated:
         username = current_user.username
         offset = request.args.get('offset', default=20, type=int)
-        if offset <100:
+        if offset <101:
             books_per_page = 20 
             all_books = books.query.all() 
             current_books = all_books[offset:offset + books_per_page]  
