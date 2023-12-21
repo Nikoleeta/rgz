@@ -16,8 +16,8 @@ app.secret_key = '12345'
 user_db = "nickoleta"
 host_ip = "localhost"
 host_port = "5432"
-database_name = "books"
-password = "123"
+database_name = "nickoleta.mysql.pythonanywhere-services.com"
+password = "postgres"
 
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://Julia:123@localhost/Recipes_rgz?client_encoding=utf8'
 
