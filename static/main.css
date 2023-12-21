@@ -11,6 +11,7 @@ header {
     top: 0;
     z-index: 10;
     font-weight: bold;
+    text-decoration: none;
 }
 
 footer {
@@ -28,8 +29,15 @@ footer {
     font-family: montserat;
     font-weight: bold;
     color: rgb(122, 80, 0);
-
 }
+
+.buttons-container {
+    display: absolute;
+    justify-content: center;
+    margin-top: 20px;
+    height: 90px;
+}
+
 .buttons button {
     background-color: #c88800c7;
     color: #fff;
@@ -46,13 +54,14 @@ footer {
     color: #fff;
     border: none;
     padding: 10px 20px;
-  
     margin-top: 10px;
     cursor: pointer;
     border-radius: 10px;
     font-weight: bold;
+    margin-bottom: -100px;
+    z-index: 20;
+    text-decoration: none;
 }
-
 
 .buttons button:hover {
     background-color: #895000;
@@ -77,17 +86,16 @@ footer {
     margin:3px;
     width:max-content;
 }
-
 .card-container{
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-gap: 20px; /* интервал между карточками */
-    
+    grid-gap: 20px; 
+    margin-bottom: 50px;
 }
 .card{
     color:#895000;  
     border-right: 1px solid #ccc;
-    height: 550px; /* высота каждой карточки */
+    height: 550px; 
     padding-left:18px;
     overflow-x: hidden;
 }

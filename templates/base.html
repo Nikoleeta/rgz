@@ -9,8 +9,10 @@
 <body>
     <header>
         <div class="buttons">
+            {% if not current_user.is_authenticated %}
                 <a href="/login" class="buttons2">Войти</a>
                 <a href="/register" class="buttons2">Зарегистрироваться</a>
+            {% endif %}
                 <a href="/main" class="buttons2">На главную</a>
                 <span class="username">{{username}}</span>
         </div>
@@ -20,8 +22,13 @@
             <a href="edit" class="buttons2">Редактировать книгу</a>
             <a href="/delete" class="buttons2">Удалить книгу</a>
         {% endif %}
+        {% if current_user.is_authenticated %}
             <a href="/logout" class="buttons2">Выйти</a>
+            {% if not username == 'nickoleta' %}
+            <a href="/deleteacc" class="buttons2">Удалить аккаунт</a>
+            {% endif %}
         </div>
+        {% endif %}
        
     </header>
 

@@ -1,10 +1,10 @@
-{% if filtered_books %}
-    <h2>Найденные книги:</h2>
+{% extends "base.html" %}
+{% block main %}
+
+<h1 style="margin-top: 80px; font-size: 40px;" class="text">Filtered Books</h1>
     <ul>
-        {% for book in filtered_books %}
-            <li>{{ book.title }} by {{ book.author }}</li>
+        {% for book in books %}
+            <li>{{ book.book }} by {{ book.author }}</li>
         {% endfor %}
     </ul>
-{% else %}
-    <p>По вашему запросу книги не найдены.</p>
-{% endif %}
+{% endblock %}
